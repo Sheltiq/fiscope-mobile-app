@@ -6,14 +6,16 @@ import { verticalScale } from "@/utils/styling";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import Button from '@/components/Button';
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
+import { useRouter } from 'expo-router';
 
 const WelcomePage = () => {
+    const router = useRouter();
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         {/* login button & image */}
         <View>
-          <TouchableOpacity style={styles.loginButton}>
+          <TouchableOpacity onPress={() => router.push('/auth/login')} style={styles.loginButton}>
             <Typo fontWeight={700}>Войти</Typo>
           </TouchableOpacity>
 
@@ -39,10 +41,10 @@ const WelcomePage = () => {
            {/* Анимированный подзаголовок с задержкой и эффектом пружины */}
           <Animated.View entering={FadeInDown.duration(1000).delay(100).springify().damping(12)} 
           style={{ alignItems: "center", gap: 2 }}>
-            <Typo size={16} color = {colors.textLight}> 
+            <Typo size={15} color = {colors.textLight}> 
               Финансы должны быть упорядочены,
             </Typo>
-            <Typo size={16} color = {colors.textLight}>
+            <Typo size={15} color = {colors.textLight}>
               чтобы в будущем вести лучший образ жизни
             </Typo>
           </Animated.View>
@@ -51,7 +53,7 @@ const WelcomePage = () => {
           <Animated.View
           entering={FadeInDown.duration(1000).delay(200).springify().damping(12)}
            style={styles.buttonContainer}>
-            <Button>
+            <Button onPress={() => router.push('/auth/register')}>
               <Typo size={23} fontWeight={700}>
                 Начать
               </Typo>
