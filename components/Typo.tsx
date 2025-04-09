@@ -10,7 +10,7 @@ const Typo = ({
   size,
   color = colors.text,
   fontWeight = "400",
-  fontFamily = "GothamPro", 
+  fontFamily = "GothamPro",
   children,
   style,
   textProps = {},
@@ -21,7 +21,7 @@ const Typo = ({
   });
 
   if (!fontsLoaded) {
-    return null; 
+    return null;
   }
 
   // Определение стилей текста на основе переданных пропсов

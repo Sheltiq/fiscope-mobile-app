@@ -1,15 +1,15 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
-import { colors } from '@/constants/theme'
-import { useRouter } from 'expo-router';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { colors } from '@/constants/theme';
+// import { useRouter } from 'expo-router'
 
-const index = () => {
-  const router = useRouter();
-  useEffect(() => {
-    setTimeout(() => {
-      router.push('/auth/welcome')
-    }, 1000);
-  },[])
+const SplashScreen = () => {
+  // const router = useRouter();
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     router.push('/auth/welcome')
+  //   }, 1000);
+  // },[])
 
   return (
     <View style={styles.container}>
@@ -22,7 +22,7 @@ const index = () => {
   );
 };
 
-export default index
+export default SplashScreen;
 
 const styles = StyleSheet.create({
   container: {

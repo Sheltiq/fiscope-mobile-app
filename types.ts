@@ -1,5 +1,5 @@
 import { Href } from "expo-router";
-import { Firestore, Timestamp } from "firebase/firestore"; //Для работы с этими библиотеками устанавливаем их командой npm i firebase phosphor-react-native
+import { Firestore, Timestamp } from "firebase/firestore";
 import { Icon } from "phosphor-react-native";
 import React, { ReactNode } from "react";
 import {
