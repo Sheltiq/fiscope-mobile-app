@@ -104,7 +104,8 @@ const Register = () => {
         {/* Нижний текст с ссылкой на вход */}
         <View style={styles.footer}>
           <Typo size={15}>У вас уже есть аккаунт?</Typo>
-          <Pressable onPress={() => router.replace("/auth/login")}> {/* Переход на экран входа */}
+          {/* Переход на экран входа */}
+          <Pressable onPress={() => router.replace("/auth/login")}>
             <Typo size={15} fontWeight={'700'} color={colors.primary}>
               Войти
             </Typo>
