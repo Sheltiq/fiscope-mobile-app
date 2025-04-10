@@ -6,7 +6,7 @@ import { colors, spacingX, spacingY } from '@/constants/theme';
 import { verticalScale } from '@/utils/styling';
 import BackButton from '@/components/BackButton';
 import Input from '@/components/Input';
-import * as Icons from 'phosphor-react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '@/components/Button';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/authContext';
@@ -69,10 +69,10 @@ const Login = () => {
             placeholder="Введите адрес электронной почты"
             onChangeText={(value) => (emailRef.current = value)}
             icon={
-              <Icons.SignIn
+              <MaterialCommunityIcons
+                name="login"
                 size={verticalScale(22)}
                 color={colors.neutral300}
-                weight="fill"
               />
             }
           />
@@ -82,10 +82,10 @@ const Login = () => {
             secureTextEntry
             onChangeText={(value) => (passwordRef.current = value)}
             icon={
-              <Icons.Password
+              <MaterialCommunityIcons
+                name="form-textbox-password"
                 size={verticalScale(22)}
                 color={colors.neutral300}
-                weight="fill"
               />
             }
           />

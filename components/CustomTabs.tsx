@@ -4,7 +4,7 @@ import { Text, PlatformPressable } from '@react-navigation/elements';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors, spacingY } from '@/constants/theme';
 import { verticalScale } from '@/utils/styling';
-import * as Icons from "phosphor-react-native";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Компонент для кастомной нижней панели навигации
 export default function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
@@ -12,30 +12,30 @@ export default function CustomTabs({ state, descriptors, navigation }: BottomTab
   // Иконки для каждой вкладки, зависят от состояния (выбрана или нет)
   const tabbarIcons: any = {
     index: (isFocused: boolean) =>(
-      <Icons.House
+      <MaterialCommunityIcons
+        name="home"
         size={verticalScale(30)}
-        weight={isFocused? "fill": "regular"}
         color={isFocused? colors.primary: colors.neutral400}
       />
     ),
     statistics: (isFocused: boolean) =>(
-      <Icons.ChartBar
+      <MaterialCommunityIcons
+        name="chart-bar"
         size={verticalScale(30)}
-        weight={isFocused? "fill": "regular"}
         color={isFocused? colors.primary: colors.neutral400}
       />
     ),
     wallet: (isFocused: boolean) =>(
-      <Icons.Wallet
+      <MaterialCommunityIcons
+        name="wallet"
         size={verticalScale(30)}
-        weight={isFocused? "fill": "regular"}
         color={isFocused? colors.primary: colors.neutral400}
       />
     ),
     profile: (isFocused: boolean) =>(
-      <Icons.UserCircle
+      <MaterialCommunityIcons
+        name="account-circle"
         size={verticalScale(30)}
-        weight={isFocused? "fill": "regular"}
         color={isFocused? colors.primary: colors.neutral400}
       />
     ),
