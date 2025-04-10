@@ -51,10 +51,10 @@ const Login = () => {
 
         {/* Приветственный текст */}
         <View style={{ gap: 5, marginTop: spacingY._20 }}>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"bold"}>
             Привет!
           </Typo>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"bold"}>
             Добро пожаловать обратно
           </Typo>
         </View>
@@ -97,7 +97,7 @@ const Login = () => {
 
           {/* Кнопка входа */}
           <Button loading={isLoading} onPress={handleSubmit}>
-            <Typo fontWeight={"700"} color={colors.white} size={20}>
+            <Typo fontWeight={"bold"} color={colors.white} size={20}>
               Войти
             </Typo>
           </Button>
@@ -107,7 +107,7 @@ const Login = () => {
         <View style={styles.footer}>
           <Typo size={15}>У вас нет аккаунта?</Typo>
           <Pressable onPress={() => router.replace("/auth/register")}>
-            <Typo size={15} fontWeight={'700'} color={colors.primary}>
+            <Typo size={15} fontWeight={'bold'} color={colors.primary}>
               Зарегистрироваться
             </Typo>
           </Pressable>

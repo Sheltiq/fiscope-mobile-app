@@ -36,7 +36,7 @@ export type TypoProps = {
   size?: number;
   color?: string;
   fontWeight?: TextStyle["fontWeight"];
-  fontFamily?: string;
+  fontFamily?: "GothamPro" | "GothamPro-Medium" | "GothamPro-Bold";
   children: any | null;
   style?: TextStyle;
   textProps?: TextProps;

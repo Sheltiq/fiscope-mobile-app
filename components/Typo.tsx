@@ -9,8 +9,8 @@ import { useFonts } from "expo-font";
 const Typo = ({
   size,
   color = colors.text,
-  fontWeight = "400",
-  fontFamily = "GothamPro",
+  fontWeight,
+  fontFamily,
   children,
   style,
   textProps = {},
@@ -18,18 +18,31 @@ const Typo = ({
 
   const [fontsLoaded] = useFonts({
     "GothamPro": require("../assets/fonts/gothampro.ttf"),
+    "GothamPro-Medium": require("../assets/fonts/gothampro_medium.ttf"),
+    "GothamPro-Bold": require("../assets/fonts/gothampro_bold.ttf"),
   });
 
   if (!fontsLoaded) {
     return null;
   }
 
+  let selectedFont = fontFamily || "GothamPro";
+  
+  if (!fontFamily) {
+    if (fontWeight === "400" || fontWeight === "normal") {
+      selectedFont = "GothamPro";
+    } else if (fontWeight === "500" || fontWeight === "medium") {
+      selectedFont = "GothamPro-Medium";
+    } else if (fontWeight === "700" || fontWeight === "bold") {
+      selectedFont = "GothamPro-Bold";
+    } 
+  }
+
   // Определение стилей текста на основе переданных пропсов
   const textStyle: TextStyle = {
     fontSize: size ? verticalScale(size) : verticalScale(18),
     color,
-    fontWeight,
-    fontFamily,
+    fontFamily: selectedFont,
   };
 
   return (

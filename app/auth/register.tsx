@@ -45,10 +45,10 @@ const Register = () => {
 
         {/* Приветственный текст */}
         <View style={{ gap: 5, marginTop: spacingY._20 }}>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"bold"}>
             Рады видеть тебя!
           </Typo>
-          <Typo size={30} fontWeight={"800"}>
+          <Typo size={30} fontWeight={"bold"}>
             Следи за расходами с нами!
           </Typo>
         </View>
@@ -95,7 +95,7 @@ const Register = () => {
 
           {/* Кнопка для отправки формы */}
           <Button loading={isLoading} onPress={handleSubmit}>
-            <Typo fontWeight={"700"} color={colors.white} size={20}>
+            <Typo fontWeight={"bold"} color={colors.white} size={20}>
               Зарегистрироваться
             </Typo>
           </Button>
@@ -106,7 +106,7 @@ const Register = () => {
           <Typo size={15}>У вас уже есть аккаунт?</Typo>
           {/* Переход на экран входа */}
           <Pressable onPress={() => router.replace("/auth/login")}>
-            <Typo size={15} fontWeight={'700'} color={colors.primary}>
+            <Typo size={15} fontWeight={'bold'} color={colors.primary}>
               Войти
             </Typo>
           </Pressable>
