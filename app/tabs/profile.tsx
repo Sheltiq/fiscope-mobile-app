@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import { colors, radius, spacingX, spacingY } from '@/constants/theme';
@@ -12,10 +12,16 @@ import { accountOptionType } from '@/types';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { signOut } from 'firebase/auth';
+import { auth } from '@/config/firebase';
+import { useRouter } from 'expo-router';
 
 const Profile = () => {
   const { user } = useAuth();
+  const router = useRouter();
 
+  // Массив опций аккаунта для отображения в профиле
   const accountOptions: accountOptionType[] = [
     {
       title: "Редактировать профиль",
@@ -42,11 +48,44 @@ const Profile = () => {
       bgColor: "#e11d48",
     },
   ];
+
+  // Функция для выхода из аккаунта
+  const handleLogout = async () => {
+    await signOut(auth);
+  }
+
+  // Показать диалоговое окно подтверждения выхода
+  const showLogoutAlert = ()=>{
+    Alert.alert("Подтвердить", "Вы уверены, что хотите выйти из системы?", [
+      {
+        text: "Отмена",
+        // onPress: ()=> console.log("отмена выхода"),
+        style: 'cancel',
+      },
+      {
+        text: "Выход",
+        onPress: ()=> handleLogout(),
+        style: 'destructive',
+      },
+    ]);
+  };
+
+  // Обработчик нажатий на опции аккаунта
+  const handlePress = (item: accountOptionType) => {
+    if(item.title == "Выйти") {
+      showLogoutAlert();
+    }
+
+    if(item.routeName) router.push(item.routeName);
+  };
+
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         <Header title="Профиль" style={{ marginVertical: spacingY._10 } } />
 
+        {/* Секция с информацией о пользователе */}
         <View style={styles.userInfo}>
 
           <View>
@@ -55,18 +94,20 @@ const Profile = () => {
 
           </View>
 
+          {/* Контейнер с именем и email пользователя */}
           <View style={styles.nameContainer}>
             <Typo size={24} fontWeight={"medium"} color={colors.neutral100}> {user?.name} </Typo>
             <Typo size={15} color={colors.neutral400}> {user?.email} </Typo>
           </View>
         </View>
 
+        {/* Список опций аккаунта с анимацией */}
         <View style ={styles.accountOptions}>
           {
             accountOptions.map((item, index) => {
               return(
-                <View style={styles.listItem}> 
-                  <TouchableOpacity style={styles.flexRow}>
+                <Animated.View key={index.toString()} entering={FadeInDown.delay(index * 50).springify().damping(14)} style={styles.listItem}> 
+                  <TouchableOpacity style={styles.flexRow} onPress={()=> handlePress(item)}>
                     <View style={[
                       styles.listIcon,
                       {
@@ -75,9 +116,10 @@ const Profile = () => {
                     ]}>
                       {item.icon && item.icon}
                     </View>
-                    <Typo size={16} style={{flex: 1}} fontWeight={"medium"}> {item.title}</Typo>
+                    <Typo size={14} style={{flex: 1}} fontWeight={"medium"}> {item.title}</Typo>
+                    <MaterialCommunityIcons name="chevron-right" size={verticalScale(30)} color={colors.white}/>
                   </TouchableOpacity>
-                </View>
+                </Animated.View>
               )
             })
           }

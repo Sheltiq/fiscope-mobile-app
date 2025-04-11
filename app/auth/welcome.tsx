@@ -16,7 +16,7 @@ const WelcomePage = () => {
         {/* login button & image */}
         <View>
           <TouchableOpacity onPress={() => router.push('/auth/login')} style={styles.loginButton}>
-            <Typo fontWeight={700}>Войти</Typo>
+            <Typo fontWeight={"medium"}>Войти</Typo>
           </TouchableOpacity>
 
           {/* Анимированное приветственное изображение с эффектом появления */}
@@ -30,10 +30,10 @@ const WelcomePage = () => {
           {/* Анимированный заголовок с пружинным эффектом */}
           <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)}
             style={{ alignItems: "center" }}>
-            <Typo size={25} fontWeight={"800"}>
+            <Typo size={25} fontWeight={"bold"}>
               Всегда следите за своими
             </Typo>
-            <Typo size={25} fontWeight={"800"}>
+            <Typo size={25} fontWeight={"bold"}>
               финансами
             </Typo>
           </Animated.View >
@@ -54,7 +54,7 @@ const WelcomePage = () => {
             entering={FadeInDown.duration(1000).delay(200).springify().damping(12)}
             style={styles.buttonContainer}>
             <Button onPress={() => router.push('/auth/register')}>
-              <Typo size={23} fontWeight={700}>
+              <Typo size={23} fontWeight={"bold"}>
                 Начать
               </Typo>
             </Button>

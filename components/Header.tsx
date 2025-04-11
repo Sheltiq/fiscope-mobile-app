@@ -9,7 +9,7 @@ const Header = ({ title = "", leftIcon, style }: HeaderProps) => {
             {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
             {title && (
                 <Typo
-                    size={22}
+                    size={20}
                     fontWeight={"bold"}
                     style={{
                         textAlign: "center",
