@@ -14,39 +14,55 @@ import { UserDataType, WalletType } from '@/types'
 import Button from '@/components/Button'
 import { useAuth } from '@/contexts/authContext'
 import { updateUser } from '@/services/userService'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker';
 import ImageUpload from '@/components/ImageUpload'
-import { createOrUpdateWallet } from '@/services/walletService'
+import { createOrUpdateWallet, deleteWallet } from '@/services/walletService'
 
-
+//Модальное окно для создания/редактирования кошелька
 const WalletModal = () => {
 
     const { user, updateUserData } = useAuth();
-
-
+    // Локальное состояние для данных кошелька
     const [wallet, setWallet] = useState<WalletType>({
         name: "",
         image: null,
     });
-
-
+    // Состояние загрузки для отображения индикатора
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    // Получение параметров существующего кошелька, если это редактирование
+    const oldWallet: {name: string, image: string, id: string} = useLocalSearchParams();
+
+    // При монтировании компонента заполняем форму данными если это редактирование
+    useEffect(() => {
+        if(oldWallet?.id) {
+            setWallet({
+                name: oldWallet?.name,
+                image: oldWallet?.image,
+            });
+        }
+    }, []);
+
+    // Обработка создания/обновления кошелька
     const onSubmit = async () => {
+        // Валидация обязательных полей
         let { name, image } = wallet;
         if (!name.trim() || !image) {
             Alert.alert("Кошелек", "Пожалуйста заполните все поля");
             return;
         }
-
+        // Формируем данные для сохранения
         const data: WalletType = {
             name,
             image,
             uid: user?.uid
         };
+        // Добавляем id если это обновление существующего кошелька
+        if(oldWallet?.id) data.id = oldWallet?.id;
 
+        // Отправляем запрос на сервер
         setLoading(true);
         const res = await createOrUpdateWallet(data);
         setLoading(false);
@@ -58,12 +74,41 @@ const WalletModal = () => {
         }
     };
 
+    // Обработка удаления кошелька
+    const onDelete = async ()=>{
+        if(!oldWallet?.id) return;
+        setLoading(true);
+        const res = await deleteWallet(oldWallet?.id);
+        setLoading(false);
+        if (res.success) {
+            router.back();
+        } else {
+            Alert.alert("Кошелек", res.msg);
+        }
+    };
+    //Показывает диалог подтверждения удаления
+    const showDeleteAlert = ()=>{
+        Alert.alert("Подтвердить", "Вы уверены, что хотите удалить? \nЭто действие приведет к удалению всех транзакций связанных с этим кошельком",
+            [
+                {
+                    text: "Отмена",
+                    style: 'cancel'
+                },
+                {
+                    text: "Удалить",
+                    onPress: ()=> onDelete(),
+                    style: 'destructive'
+                },
+            ]
+        );
+    };
+
     return (
         <ModalWrapper>
 
             <View style={styles.container}>
 
-                <Header title="Новый кошелек" leftIcon={<BackButton />} style={{ marginBottom: spacingY._10 }} />
+                <Header title={oldWallet?.id ? "Обновить кошелек" : "Новый кошелек"} leftIcon={<BackButton />} style={{ marginBottom: spacingY._10 }} />
 
 
                 <ScrollView contentContainerStyle={styles.form}>
@@ -84,8 +129,16 @@ const WalletModal = () => {
             </View>
 
             <View style={styles.footer}>
+                {oldWallet?.id && !loading && (
+                    <Button onPress={showDeleteAlert}  style={{backgroundColor: colors.rose, paddingHorizontal: spacingX._15}}>
+                        <MaterialCommunityIcons name="delete-forever" size={verticalScale(28)} color={colors.white}/>
+                    </Button>
+
+                )}
                 <Button onPress={onSubmit} loading={loading} style={{ flex: 1 }}>
-                    <Typo fontWeight={"medium"} size={18}>Добавить кошелек</Typo>
+                    <Typo fontWeight={"medium"} size={18}>
+                        {oldWallet?.id ? "Обновить" : "Добавить"}
+                    </Typo>
                 </Button>
             </View>
         </ModalWrapper>

@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { ImageUploadProps } from '@/types'
 import Feather from 'react-native-vector-icons/Feather';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { colors, radius } from '@/constants/theme';
 import { scale, verticalScale } from '@/utils/styling';
 import Typo from './Typo';
@@ -54,7 +54,7 @@ const ImageUpload = ({
                         transition={100}
                     />
                     <TouchableOpacity style={styles.deleteIcon} onPress={onClear}>
-                        <MaterialCommunityIcons name="delete-forever" size={verticalScale(24)} color={colors.red}/>
+                        <Entypo name="cross" size={verticalScale(28)} color={colors.red}/>
                     </TouchableOpacity>
                 </View>
             )}
