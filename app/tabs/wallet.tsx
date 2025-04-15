@@ -1,32 +1,40 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import ScreenWrapper from '@/components/ScreenWrapper';
-import { colors, radius, spacingX, spacingY } from '@/constants/theme';
-import { verticalScale } from '@/utils/styling';
-import Typo from '@/components/Typo';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useRouter } from 'expo-router';
-import useFetchData from '@/hooks/useFetchData';
-import { WalletType } from '@/types';
-import { orderBy, where } from 'firebase/firestore';
-import { useAuth } from '@/contexts/authContext';
-import Loading from '@/components/Loading';
-import WalletListItem from '@/components/WalletListItem';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React from "react";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import { colors, radius, spacingX, spacingY } from "@/constants/theme";
+import { verticalScale } from "@/utils/styling";
+import Typo from "@/components/Typo";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useRouter } from "expo-router";
+import useFetchData from "@/hooks/useFetchData";
+import { WalletType } from "@/types";
+import { orderBy, where } from "firebase/firestore";
+import { useAuth } from "@/contexts/authContext";
+import Loading from "@/components/Loading";
+import WalletListItem from "@/components/WalletListItem";
 
 const Wallet = () => {
-
   const router = useRouter();
   const { user } = useAuth();
 
   // Получаем список кошельков текущего пользователя, отсортированный по дате создания
-  const { data: wallets, error, loading } = useFetchData<WalletType>("wallets", [
+  const {
+    data: wallets,
+    error,
+    loading,
+  } = useFetchData<WalletType>("wallets", [
     where("uid", "==", user?.uid),
     orderBy("created", "desc"),
   ]);
 
-
   // console.log('wallets: ', wallets.length);
-  
+
   // Вычисляем общий баланс по всем кошелькам
   const getTotalBalance = () =>
     wallets.reduce((total, item) => {
@@ -39,7 +47,7 @@ const Wallet = () => {
       <View style={styles.container}>
         {/* Секция отображения общего баланса */}
         <View style={styles.balanceView}>
-          <View style={{ alignItems: 'center' }}>
+          <View style={{ alignItems: "center" }}>
             <Typo size={43} fontWeight={"medium"}>
               ₽{getTotalBalance()?.toFixed(2)}
             </Typo>
@@ -55,8 +63,14 @@ const Wallet = () => {
             <Typo size={18} fontWeight={"medium"}>
               Мои кошельки
             </Typo>
-            <TouchableOpacity onPress={() => router.push("/modals/walletModal")}>
-              <MaterialCommunityIcons name="plus-circle" size={verticalScale(33)} color={colors.primary} />
+            <TouchableOpacity
+              onPress={() => router.push("/modals/walletModal")}
+            >
+              <MaterialCommunityIcons
+                name="plus-circle"
+                size={verticalScale(33)}
+                color={colors.primary}
+              />
             </TouchableOpacity>
           </View>
 
@@ -65,7 +79,9 @@ const Wallet = () => {
           <FlatList
             data={wallets}
             renderItem={({ item, index }) => {
-              return <WalletListItem item={item} index={index} router={router} />
+              return (
+                <WalletListItem item={item} index={index} router={router} />
+              );
             }}
             contentContainerStyle={styles.listStyle}
           />

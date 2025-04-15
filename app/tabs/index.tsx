@@ -18,10 +18,25 @@ import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 import HomeCard from "@/components/HomeCard";
 import TransactionList from "@/components/TransactionList";
 import { useRouter } from "expo-router";
+import { limit, orderBy, where } from "firebase/firestore";
+import useFetchData from "@/hooks/useFetchData";
+import { TransactionType } from "@/types";
 
 const Home = () => {
   const { user } = useAuth();
   const router = useRouter();
+
+  const constraints = [
+    where("uid", "==", user?.uid),
+    orderBy("date", "desc"),
+    limit(30),
+  ];
+
+  const {
+    data: recentTransactions,
+    error,
+    loading: transactionsLoading,
+  } = useFetchData<TransactionType>("transactions", constraints);
 
   return (
     <ScreenWrapper>
@@ -52,8 +67,8 @@ const Home = () => {
           </View>
 
           <TransactionList
-            data={[1, 2, 3, 4, 5, 6, 7]}
-            loading={false}
+            data={recentTransactions}
+            loading={transactionsLoading}
             emptyListMessage="Транзакции еще не добавлены"
             title="Недавние транзакции"
           />

@@ -32,6 +32,7 @@ import { expenseCategories, transactionTypes } from "@/constants/data";
 import useFetchData from "@/hooks/useFetchData";
 import { orderBy, where } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { createOrUpdateTransaction } from "@/services/transactionService";
 
 //Модальное окно для создания/редактирования кошелька
 const TransactionModal = () => {
@@ -103,6 +104,16 @@ const TransactionModal = () => {
     };
 
     // console.log("Информация о транзакции: ", transactionData);
+
+    setLoading(true);
+    const res = await createOrUpdateTransaction(transactionData);
+
+    setLoading(false);
+    if (res.success) {
+      router.back();
+    } else {
+      Alert.alert("Транзакция", res.msg);
+    }
   };
 
   // Обработка удаления кошелька

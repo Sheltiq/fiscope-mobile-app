@@ -1,6 +1,7 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
-import { colors } from '@/constants/theme';
+import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { colors } from "@/constants/theme";
+import ScreenWrapper from "@/components/ScreenWrapper";
 // import { useRouter } from 'expo-router'
 
 const SplashScreen = () => {
@@ -12,13 +13,13 @@ const SplashScreen = () => {
   // },[])
 
   return (
-    <View style={styles.container}>
+    <ScreenWrapper style={styles.container}>
       <Image
         style={styles.logo}
         resizeMode="contain"
         source={require("../assets/images/splash.png")}
       />
-    </View>
+    </ScreenWrapper>
   );
 };
 
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.neutral900,
   },
   logo: {
-    height: '30%',
-    aspectRatio: '1',
+    height: "30%",
+    aspectRatio: "1",
   },
 });

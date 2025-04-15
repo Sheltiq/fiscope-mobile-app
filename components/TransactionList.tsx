@@ -6,9 +6,10 @@ import { verticalScale } from "@/utils/styling";
 import Typo from "./Typo";
 import { FlashList } from "@shopify/flash-list";
 import Loading from "./Loading";
-import { expenseCategories } from "@/constants/data";
+import { expenseCategories, incomeCategory } from "@/constants/data";
 import { TouchableOpacity } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { Timestamp } from "firebase/firestore";
 
 const TransactionList = ({
   data,
@@ -62,8 +63,16 @@ const TransactionItem = ({
   index,
   handleClick,
 }: TransactionItemProps) => {
-  let category = expenseCategories["utilities"];
+  let category =
+    item?.type == "income" ? incomeCategory : expenseCategories[item.category!];
   const IconComponent = category.icon;
+
+  const date = (item?.date as Timestamp)
+    ?.toDate()
+    ?.toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "short",
+    });
   return (
     <Animated.View
       entering={FadeInDown.delay(index * 70)
@@ -88,16 +97,19 @@ const TransactionItem = ({
             color={colors.neutral400}
             textProps={{ numberOfLines: 1 }}
           >
-            Счет за воду
+            {item?.description}
           </Typo>
         </View>
 
         <View style={styles.amountDate}>
-          <Typo fontWeight={"medium"} color={colors.rose}>
-            - ₽400
+          <Typo
+            fontWeight={"medium"}
+            color={item?.type == "income" ? colors.primary : colors.rose}
+          >
+            {`${item?.type == "income" ? "+ ₽" : "- ₽"}${item?.amount}`}
           </Typo>
           <Typo size={13} color={colors.neutral400}>
-            1 апр
+            {date}
           </Typo>
         </View>
       </TouchableOpacity>
