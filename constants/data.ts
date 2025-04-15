@@ -79,13 +79,13 @@ export const expenseCategories: ExpenseCategoriesType = {
 };
 
 export const incomeCategory: CategoryType = {
-  label: "Income",
+  label: "Доход",
   value: "income",
   icon: Icons.CurrencyDollarSimple,
   bgColor: "#16a34a",
 };
 
 export const transactionTypes = [
-  { label: "Expense", value: "expense" },
-  { label: "Income", value: "income" },
+  { label: "Расход", value: "expense" },
+  { label: "Доход", value: "income" },
 ];
