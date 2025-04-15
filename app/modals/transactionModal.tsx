@@ -32,12 +32,14 @@ import { expenseCategories, transactionTypes } from "@/constants/data";
 import useFetchData from "@/hooks/useFetchData";
 import { orderBy, where } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { createOrUpdateTransaction } from "@/services/transactionService";
+import {
+  createOrUpdateTransaction,
+  deleteTransaction,
+} from "@/services/transactionService";
 
-//Модальное окно для создания/редактирования кошелька
 const TransactionModal = () => {
   const { user } = useAuth();
-  // Локальное состояние для данных кошелька
+
   const [transaction, setTransaction] = useState<TransactionType>({
     type: "expense",
     amount: 0,
@@ -47,7 +49,7 @@ const TransactionModal = () => {
     walletId: "",
     image: null,
   });
-  // Состояние загрузки для отображения индикатора
+
   const [loading, setLoading] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const router = useRouter();
@@ -61,9 +63,19 @@ const TransactionModal = () => {
     orderBy("created", "desc"),
   ]);
 
-  // Получение параметров существующего кошелька, если это редактирование
-  const oldTransaction: { name: string; image: string; id: string } =
-    useLocalSearchParams();
+  type paramType = {
+    id: string;
+    type: string;
+    amount: string;
+    category?: string;
+    date: string;
+    description?: string;
+    image?: any;
+    uid?: string;
+    walletId: string;
+  };
+
+  const oldTransaction: paramType = useLocalSearchParams();
 
   const onDateChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || transaction.date;
@@ -71,17 +83,20 @@ const TransactionModal = () => {
     setShowDatePicker(Platform.OS == "ios" ? true : false);
   };
 
-  // // При монтировании компонента заполняем форму данными если это редактирование
-  // useEffect(() => {
-  //     if(oldTransaction?.id) {
-  //         setTransaction({
-  //             name: oldTransaction?.name,
-  //             image: oldTransaction?.image,
-  //         });
-  //     }
-  // }, []);
+  useEffect(() => {
+    if (oldTransaction?.id) {
+      setTransaction({
+        type: oldTransaction?.type,
+        amount: Number(oldTransaction.amount),
+        description: oldTransaction.description || "",
+        category: oldTransaction.category || "",
+        date: new Date(oldTransaction.date),
+        walletId: oldTransaction.walletId,
+        image: oldTransaction?.image,
+      });
+    }
+  }, []);
 
-  // Обработка создания/обновления кошелька
   const onSubmit = async () => {
     const { type, amount, description, category, date, walletId, image } =
       transaction;
@@ -99,12 +114,13 @@ const TransactionModal = () => {
       category,
       date,
       walletId,
-      image,
+      image: image ? image : null,
       uid: user?.uid,
     };
 
     // console.log("Информация о транзакции: ", transactionData);
 
+    if (oldTransaction?.id) transactionData.id = oldTransaction.id;
     setLoading(true);
     const res = await createOrUpdateTransaction(transactionData);
 
@@ -116,23 +132,25 @@ const TransactionModal = () => {
     }
   };
 
-  // Обработка удаления кошелька
   const onDelete = async () => {
     if (!oldTransaction?.id) return;
     setLoading(true);
-    const res = await deleteWallet(oldTransaction?.id);
+    const res = await deleteTransaction(
+      oldTransaction?.id,
+      oldTransaction.walletId
+    );
     setLoading(false);
     if (res.success) {
       router.back();
     } else {
-      Alert.alert("Кошелек", res.msg);
+      Alert.alert("Транзакция", res.msg);
     }
   };
-  //Показывает диалог подтверждения удаления
+
   const showDeleteAlert = () => {
     Alert.alert(
       "Подтвердить",
-      "Вы уверены, что хотите удалить? \nЭто действие приведет к удалению всех транзакций связанных с этим кошельком",
+      "Вы уверены, что хотите удалить эту транзакцию?",
       [
         {
           text: "Отмена",

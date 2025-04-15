@@ -1,7 +1,15 @@
 import { firestore } from "@/config/firebase";
 import { ResponseType, TransactionType, WalletType } from "@/types";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { uploadFileToCloudinary } from "./imageService";
+import { createOrUpdateWallet } from "./walletService";
 
 export const createOrUpdateTransaction = async (
   transactionData: Partial<TransactionType>
@@ -13,6 +21,23 @@ export const createOrUpdateTransaction = async (
     }
 
     if (id) {
+      const oldTransactionSnapshot = await getDoc(
+        doc(firestore, "transactions", id)
+      );
+      const oldTransaction = oldTransactionSnapshot.data() as TransactionType;
+      const shouldRevertOrignal =
+        oldTransaction.type != type ||
+        oldTransaction.amount != amount ||
+        oldTransaction.walletId != walletId;
+      if (shouldRevertOrignal) {
+        let res = await revertAndUpdateWallets(
+          oldTransaction,
+          Number(amount),
+          type,
+          walletId
+        );
+        if (!res.success) return res;
+      }
     } else {
       let res = await updateWalletForNewTransaction(
         walletId!,
@@ -89,6 +114,146 @@ const updateWalletForNewTransaction = async (
       amount: updatedWalletAmount,
       [updateType]: updatedTotals,
     });
+
+    return { success: true };
+  } catch (err: any) {
+    console.log("ошибка при обновлении кошелька для новой транзакции: ", err);
+    return { success: false, msg: err.message };
+  }
+};
+
+const revertAndUpdateWallets = async (
+  oldTransaction: TransactionType,
+  newTransactionAmount: number,
+  newTransactionType: string,
+  newWalletId: string
+) => {
+  try {
+    const orignalWalletSnapshot = await getDoc(
+      doc(firestore, "wallets", oldTransaction.walletId)
+    );
+
+    const orignalWallet = orignalWalletSnapshot.data() as WalletType;
+
+    let newWalletSnapshot = await getDoc(
+      doc(firestore, "wallets", newWalletId)
+    );
+    let newWallet = newWalletSnapshot.data() as WalletType;
+
+    const revertType =
+      oldTransaction.type == "income" ? "totalIncome" : "totalExpenses";
+
+    const revertIncomeExpense: number =
+      oldTransaction.type == "income"
+        ? -Number(oldTransaction.amount)
+        : Number(oldTransaction.amount);
+
+    const revertedWalletAmount =
+      Number(orignalWallet.amount) + revertIncomeExpense;
+    //сумма кошелька после удаления транзакции
+
+    const revertedIncomeExpenseAmount =
+      Number(orignalWallet[revertType]) - Number(oldTransaction.amount);
+
+    if (newTransactionType == "expense") {
+      //если пользователь пытается конвертировать доходы в расходы на одном и том же кошельке
+      //или если пользователь пытается увеличить сумму расходов, но не имеет достаточного баланса
+      if (
+        oldTransaction.walletId == newWalletId &&
+        revertedWalletAmount < newTransactionAmount
+      ) {
+        return {
+          success: false,
+          msg: "На выбранном кошельке недостаточно средств",
+        };
+      }
+
+      //если пользователь пытается добавить расходы с нового кошелька, но на кошельке нет достаточного баланса
+      if (newWallet.amount! < newTransactionAmount) {
+        return {
+          success: false,
+          msg: "На выбранном кошельке недостаточно средств",
+        };
+      }
+    }
+
+    await createOrUpdateWallet({
+      id: oldTransaction.walletId,
+      amount: revertedWalletAmount,
+      [revertType]: revertedIncomeExpenseAmount,
+    });
+    //возврат завершен
+
+    //повторно получить новый кошелек, потому что мы,  только что обновили его
+    newWalletSnapshot = await getDoc(doc(firestore, "wallets", newWalletId));
+    newWallet = newWalletSnapshot.data() as WalletType;
+
+    const updateType =
+      newTransactionType == "income" ? "totalIncome" : "totalExpenses";
+
+    const updatedTransactionAmount: number =
+      newTransactionType == "income"
+        ? Number(newTransactionAmount)
+        : -Number(newTransactionAmount);
+
+    const newWalletAmount = Number(newWallet.amount) + updatedTransactionAmount;
+
+    const newIncomeExpenseAmount = Number(
+      newWallet[updateType]! + Number(newTransactionAmount)
+    );
+
+    await createOrUpdateWallet({
+      id: newWalletId,
+      amount: newWalletAmount,
+      [updateType]: newIncomeExpenseAmount,
+    });
+
+    return { success: true };
+  } catch (err: any) {
+    console.log("ошибка при обновлении кошелька для новой транзакции: ", err);
+    return { success: false, msg: err.message };
+  }
+};
+
+export const deleteTransaction = async (
+  transactionId: string,
+  walletId: string
+) => {
+  try {
+    const transactionRef = doc(firestore, "transactions", transactionId);
+    const transactionSnapshot = await getDoc(transactionRef);
+
+    if (!transactionSnapshot.exists()) {
+      return { success: false, msg: "Транзакция не найдена" };
+    }
+    const transactionData = transactionSnapshot.data() as TransactionType;
+
+    const transactionType = transactionData?.type;
+    const transactionAmount = transactionData?.amount;
+
+    const walletSnapshot = await getDoc(doc(firestore, "wallets", walletId));
+    const walletData = walletSnapshot.data() as WalletType;
+
+    const updateType =
+      transactionType == "income" ? "totalIncome" : "totalExpenses";
+
+    const newWalletAmount =
+      walletData?.amount! -
+      (transactionType == "income" ? transactionAmount : -transactionAmount);
+
+    const newIncomeExpenseAmount = walletData[updateType]! - transactionAmount;
+
+    if (transactionType == "income" && newWalletAmount < 0) {
+      return { success: false, msg: "Вы не можете удалить эту транзакцию" };
+    }
+
+    await createOrUpdateWallet({
+      id: walletId,
+      amount: newWalletAmount,
+      [updateType]: newIncomeExpenseAmount,
+    });
+
+    await deleteDoc(transactionRef);
 
     return { success: true };
   } catch (err: any) {
