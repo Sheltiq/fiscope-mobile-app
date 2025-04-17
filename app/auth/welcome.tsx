@@ -1,12 +1,12 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import ScreenWrapper from '@/components/ScreenWrapper';
-import Typo from '@/components/Typo';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import Typo from "@/components/Typo";
 import { verticalScale } from "@/utils/styling";
 import { colors, spacingX, spacingY } from "@/constants/theme";
-import Button from '@/components/Button';
+import Button from "@/components/Button";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 
 const WelcomePage = () => {
   const router = useRouter();
@@ -15,32 +15,45 @@ const WelcomePage = () => {
       <View style={styles.container}>
         {/* login button & image */}
         <View>
-          <TouchableOpacity onPress={() => router.push('/auth/login')} style={styles.loginButton}>
+          <TouchableOpacity
+            onPress={() => router.push("/auth/login")}
+            style={styles.loginButton}
+          >
             <Typo fontWeight={"medium"}>Войти</Typo>
           </TouchableOpacity>
 
           {/* Анимированное приветственное изображение с эффектом появления */}
-          <Animated.Image entering={FadeIn.duration(1000)} source={require("../../assets/images/welcome.png")}
+          <Animated.Image
+            entering={FadeIn.duration(1000)}
+            source={require("../../assets/images/welcome.png")}
             style={styles.welcomeImage}
-            resizeMode="contain" />
+            resizeMode="contain"
+          />
         </View>
 
         {/* Нижний колонтитул */}
         <View style={styles.footer}>
           {/* Анимированный заголовок с пружинным эффектом */}
-          <Animated.View entering={FadeInDown.duration(1000).springify().damping(12)}
-            style={{ alignItems: "center" }}>
+          <Animated.View
+            entering={FadeInDown.duration(1000).springify().damping(12)}
+            style={{ alignItems: "center" }}
+          >
             <Typo size={25} fontWeight={"bold"}>
               Всегда следите за своими
             </Typo>
             <Typo size={25} fontWeight={"bold"}>
               финансами
             </Typo>
-          </Animated.View >
+          </Animated.View>
 
           {/* Анимированный подзаголовок с задержкой и эффектом пружины */}
-          <Animated.View entering={FadeInDown.duration(1000).delay(100).springify().damping(12)}
-            style={{ alignItems: "center", gap: 2 }}>
+          <Animated.View
+            entering={FadeInDown.duration(1000)
+              .delay(100)
+              .springify()
+              .damping(12)}
+            style={{ alignItems: "center", gap: 2 }}
+          >
             <Typo size={15} color={colors.textLight}>
               Финансы должны быть упорядочены,
             </Typo>
@@ -51,9 +64,13 @@ const WelcomePage = () => {
 
           {/* Анимированная кнопка с наибольшей задержкой появления */}
           <Animated.View
-            entering={FadeInDown.duration(1000).delay(200).springify().damping(12)}
-            style={styles.buttonContainer}>
-            <Button onPress={() => router.push('/auth/register')}>
+            entering={FadeInDown.duration(1000)
+              .delay(200)
+              .springify()
+              .damping(12)}
+            style={styles.buttonContainer}
+          >
+            <Button onPress={() => router.push("/auth/register")}>
               <Typo size={23} fontWeight={"bold"}>
                 Начать
               </Typo>
@@ -64,7 +81,6 @@ const WelcomePage = () => {
     </ScreenWrapper>
   );
 };
-
 
 // Стили для экрана приветсвия
 const styles = StyleSheet.create({

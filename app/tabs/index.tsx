@@ -50,7 +50,10 @@ const Home = () => {
               {user?.name}
             </Typo>
           </View>
-          <TouchableOpacity style={styles.searchIcon}>
+          <TouchableOpacity
+            onPress={() => router.push("/modals/searchModal")}
+            style={styles.searchIcon}
+          >
             <FontAwesome6
               name="magnifying-glass"
               size={verticalScale(22)}

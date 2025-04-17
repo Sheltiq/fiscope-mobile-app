@@ -14,6 +14,7 @@ import {
   fetchYearlyStats,
 } from "@/services/transactionService";
 import TransactionList from "@/components/TransactionList";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Statistics = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -22,17 +23,17 @@ const Statistics = () => {
   const [chartLoading, setChartLoading] = useState(false);
   const [transactions, setTransactions] = useState([]);
 
-  useEffect(() => {
-    if (activeIndex == 0) {
-      getWeeklyStats();
-    }
-    if (activeIndex == 1) {
-      getMonthlyStats();
-    }
-    if (activeIndex == 2) {
-      getYearlyStats();
-    }
-  }, [activeIndex]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (activeIndex === 0) {
+        getWeeklyStats();
+      } else if (activeIndex === 1) {
+        getMonthlyStats();
+      } else if (activeIndex === 2) {
+        getYearlyStats();
+      }
+    }, [activeIndex, user])
+  );
 
   const getWeeklyStats = async () => {
     setChartLoading(true);
