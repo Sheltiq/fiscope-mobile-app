@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
@@ -7,6 +7,7 @@ import { colors, spacingX, spacingY } from "@/constants/theme";
 import Button from "@/components/Button";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import { Image } from "expo-image";
 
 const WelcomePage = () => {
   const router = useRouter();
@@ -23,12 +24,13 @@ const WelcomePage = () => {
           </TouchableOpacity>
 
           {/* Анимированное приветственное изображение с эффектом появления */}
-          <Animated.Image
-            entering={FadeIn.duration(1000)}
-            source={require("../../assets/images/welcome.png")}
-            style={styles.welcomeImage}
-            resizeMode="contain"
-          />
+
+          <Animated.View entering={FadeIn.duration(1000)}>
+            <Image
+              source="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHR2ZDBvaTk5cHYzOGxiNmpqMzNwaG9ubW11dW0zcTZjNmJjdDg3MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/iTjbbF1iQ6qrmbC5qo/giphy.gif"
+              style={styles.welcomeImage}
+            />
+          </Animated.View>
         </View>
 
         {/* Нижний колонтитул */}
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: spacingY._7,
   },
   welcomeImage: {
-    width: "100%",
+    width: "110%",
     height: verticalScale(300),
     alignSelf: "center",
     marginTop: verticalScale(100),
