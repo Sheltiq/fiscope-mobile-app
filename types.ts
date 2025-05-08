@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Href } from "expo-router";
 import { Firestore, Timestamp } from "firebase/firestore";
 import { Icon } from "phosphor-react-native";
@@ -172,4 +173,18 @@ export type WalletType = {
   image: any;
   uid?: string;
   created?: Date;
+};
+
+export type SettingsButtonProps = {
+  title: string;
+  icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
+  onPress: () => void;
+  isActive: boolean;
+};
+
+export type ThemeContextType = {
+  isSystemTheme: boolean;
+  currentTheme: string;
+  toggleTheme: (newTheme: string) => void;
+  useSystemTheme: () => void;
 };

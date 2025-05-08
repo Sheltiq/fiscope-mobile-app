@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
 import { AuthProvider } from "@/contexts/authContext";
+import ThemeProvider from "@/contexts/themeContext";
 
 const StackLayot = () => {
   return (
@@ -30,6 +31,12 @@ const StackLayot = () => {
           presentation: "modal",
         }}
       />
+      <Stack.Screen
+        name="modals/settingsModal"
+        options={{
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 };
@@ -37,7 +44,9 @@ const StackLayot = () => {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <StackLayot />
+      <ThemeProvider>
+        <StackLayot />
+      </ThemeProvider>
     </AuthProvider>
   );
 }
