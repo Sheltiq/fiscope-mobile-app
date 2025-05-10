@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Href } from "expo-router";
 import { Firestore, Timestamp } from "firebase/firestore";
 import { Icon } from "phosphor-react-native";
@@ -187,4 +187,10 @@ export type ThemeContextType = {
   currentTheme: string;
   toggleTheme: (newTheme: string) => void;
   useSystemTheme: () => void;
+};
+
+export type ContactButtonProps = {
+  title: string;
+  icon: React.ComponentProps<typeof FontAwesome>["name"];
+  onPress: () => void;
 };

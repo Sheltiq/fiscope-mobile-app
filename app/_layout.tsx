@@ -37,6 +37,12 @@ const StackLayot = () => {
           presentation: "modal",
         }}
       />
+      <Stack.Screen
+        name="modals/contactModal"
+        options={{
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 };

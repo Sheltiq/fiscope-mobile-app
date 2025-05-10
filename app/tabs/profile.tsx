@@ -44,15 +44,15 @@ const Profile = () => {
       bgColor: "#059669",
     },
     {
-      title: "Политика конфиденциальности",
+      title: "Связаться",
       icon: (
         <MaterialCommunityIcons
           size={26}
-          name="file-lock-outline"
+          name="link-variant"
           color={colors.white}
         />
       ),
-      // routeName: "/modals/privacyModal",
+      routeName: "/modals/contactModal",
       bgColor: colors.neutral600,
     },
     {
