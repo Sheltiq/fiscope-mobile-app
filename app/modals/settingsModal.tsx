@@ -24,9 +24,7 @@ const SettingsModal = () => {
           showsVerticalScrollIndicator={false}
         >
           <View>
-            <Typo color={colors.neutral200} size={16}>
-              Тема приложения
-            </Typo>
+            <Typo size={16}>Тема приложения</Typo>
             <SettingsButton
               title="Светлая"
               icon="lightbulb-on"

@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
@@ -18,8 +18,10 @@ import { orderBy, where } from "firebase/firestore";
 import { useAuth } from "@/contexts/authContext";
 import Loading from "@/components/Loading";
 import WalletListItem from "@/components/WalletListItem";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const Wallet = () => {
+  const { currentTheme } = useContext(ThemeContext);
   const router = useRouter();
   const { user } = useAuth();
 
@@ -43,21 +45,54 @@ const Wallet = () => {
     }, 0);
 
   return (
-    <ScreenWrapper style={{ backgroundColor: colors.black }}>
+    <ScreenWrapper
+      style={{
+        backgroundColor:
+          currentTheme === "dark" ? colors.black : colors.neutralBlue,
+      }}
+    >
       <View style={styles.container}>
         {/* Секция отображения общего баланса */}
-        <View style={styles.balanceView}>
+        <View
+          style={[
+            styles.balanceView,
+            {
+              backgroundColor:
+                currentTheme === "dark" ? colors.black : colors.neutralBlue,
+            },
+          ]}
+        >
           <View style={{ alignItems: "center" }}>
             <Typo size={43} fontWeight={"medium"}>
               ₽{getTotalBalance()?.toFixed(2)}
             </Typo>
-            <Typo size={16} color={colors.neutral300}>
+            <Typo
+              size={16}
+              fontWeight={"medium"}
+              color={
+                currentTheme === "dark" ? colors.neutral300 : colors.neutral500
+              }
+            >
               Общий баланс
             </Typo>
           </View>
         </View>
         {/* Секция списка кошельков */}
-        <View style={styles.wallets}>
+        <View
+          style={[
+            styles.wallets,
+            {
+              backgroundColor:
+                currentTheme === "dark"
+                  ? colors.neutral900
+                  : colors.bgScreenLight,
+            },
+            {
+              borderColor:
+                currentTheme === "dark" ? colors.neutral700 : colors.neutral400,
+            },
+          ]}
+        >
           {/* Заголовок и кнопка добавления нового кошелька */}
           <View style={styles.flexRow}>
             <Typo size={18} fontWeight={"medium"}>
@@ -112,12 +147,13 @@ const styles = StyleSheet.create({
   },
   wallets: {
     flex: 1,
-    backgroundColor: colors.neutral900,
+    // backgroundColor: colors.neutral900,
     borderTopRightRadius: radius._30,
-
     borderTopLeftRadius: radius._30,
     padding: spacingX._20,
     paddingTop: spacingX._25,
+    // borderColor: colors.neutral400,
+    borderWidth: 0.4,
   },
   listStyle: {
     paddingVertical: spacingY._25,

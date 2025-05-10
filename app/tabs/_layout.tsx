@@ -1,16 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { Tabs } from 'expo-router';
-import CustomTabs from '@/components/CustomTabs';
+import { StyleSheet, Text, View } from "react-native";
+import React, { useContext } from "react";
+import { Tabs } from "expo-router";
+import CustomTabs from "@/components/CustomTabs";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const _layout = () => {
+  const { currentTheme } = useContext(ThemeContext);
   return (
-    <Tabs tabBar={CustomTabs} screenOptions={{ headerShown: false }}>
-    <Tabs.Screen name ="index"/>
-    <Tabs.Screen name ="statistics"/>
-    <Tabs.Screen name ="wallet"/>
-    <Tabs.Screen name ="profile"/>
-  </Tabs>
+    <Tabs
+      tabBar={(props) => <CustomTabs {...props} currentTheme={currentTheme} />}
+      screenOptions={{ headerShown: false }}
+    >
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="statistics" />
+      <Tabs.Screen name="wallet" />
+      <Tabs.Screen name="profile" />
+    </Tabs>
   );
 };
 

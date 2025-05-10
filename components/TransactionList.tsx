@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import {
   TransactionItemProps,
   TransactionListType,
@@ -15,6 +15,7 @@ import { TouchableOpacity } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { Timestamp } from "firebase/firestore";
 import { useRouter } from "expo-router";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const TransactionList = ({
   data,
@@ -84,6 +85,7 @@ const TransactionItem = ({
   index,
   handleClick,
 }: TransactionItemProps) => {
+  const { currentTheme } = useContext(ThemeContext);
   let category =
     item?.type == "income" ? incomeCategory : expenseCategories[item.category!];
   const IconComponent = category.icon;
@@ -100,7 +102,17 @@ const TransactionItem = ({
         .springify()
         .damping(14)}
     >
-      <TouchableOpacity style={styles.row} onPress={() => handleClick(item)}>
+      <TouchableOpacity
+        style={[
+          styles.row,
+          {
+            backgroundColor:
+              currentTheme === "dark" ? colors.neutral800 : colors.btnLight,
+          },
+          {},
+        ]}
+        onPress={() => handleClick(item)}
+      >
         <View style={[styles.icon, { backgroundColor: category.bgColor }]}>
           {IconComponent && (
             <IconComponent
@@ -115,7 +127,9 @@ const TransactionItem = ({
           <Typo size={17}>{category.label}</Typo>
           <Typo
             size={12}
-            color={colors.neutral400}
+            color={
+              currentTheme === "dark" ? colors.neutral400 : colors.neutral500
+            } //описание
             textProps={{ numberOfLines: 1 }}
           >
             {item?.description}
@@ -129,7 +143,12 @@ const TransactionItem = ({
           >
             {`${item?.type == "income" ? "+ ₽" : "- ₽"}${item?.amount}`}
           </Typo>
-          <Typo size={13} color={colors.neutral400}>
+          <Typo
+            size={13}
+            color={
+              currentTheme === "dark" ? colors.neutral400 : colors.neutral500
+            }
+          >
             {date}
           </Typo>
         </View>
@@ -154,10 +173,12 @@ const styles = StyleSheet.create({
     gap: spacingX._12,
     marginBottom: spacingY._12,
 
-    backgroundColor: colors.neutral800,
+    // backgroundColor: colors.neutral800,
     padding: spacingY._10,
     paddingHorizontal: spacingY._10,
     borderRadius: radius._17,
+    borderColor: colors.neutral500,
+    borderWidth: 0.3,
   },
   icon: {
     height: verticalScale(44),

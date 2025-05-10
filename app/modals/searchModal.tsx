@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import ModalWrapper from "@/components/ModalWrapper";
 import Typo from "@/components/Typo";
@@ -30,8 +30,10 @@ import {
   incomeCategory,
   transactionTypes,
 } from "@/constants/data";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const SearchModal = () => {
+  const { currentTheme } = useContext(ThemeContext);
   const { user } = useAuth();
   const [search, setSearch] = useState("");
 
@@ -72,7 +74,12 @@ const SearchModal = () => {
   });
 
   return (
-    <ModalWrapper style={{ backgroundColor: colors.neutral900 }}>
+    <ModalWrapper
+      style={{
+        backgroundColor:
+          currentTheme === "dark" ? colors.neutral900 : colors.bgModalLight,
+      }}
+    >
       <View style={styles.container}>
         <Header
           title={"Поиск"}
@@ -80,13 +87,21 @@ const SearchModal = () => {
           style={{ marginBottom: spacingY._10 }}
         />
         {/* form */}
-        <ScrollView contentContainerStyle={styles.form}>
+        <ScrollView
+          contentContainerStyle={styles.form}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.inputContainer}>
             <Input
               placeholder="худи..."
               value={search}
               placeholderTextColor={colors.neutral400}
-              containerStyle={{ backgroundColor: colors.neutral800 }}
+              containerStyle={{
+                backgroundColor:
+                  currentTheme === "dark"
+                    ? colors.neutral800
+                    : colors.neutral100,
+              }}
               onChangeText={(value) => setSearch(value)}
             />
           </View>

@@ -1,23 +1,30 @@
 import { StyleSheet, Text, TextStyle, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { verticalScale } from "@/utils/styling";
 import { colors } from "@/constants/theme";
 import { TypoProps } from "@/types";
 import { useFonts } from "expo-font";
+import { ThemeContext } from "@/contexts/themeContext";
 
 // Компонент Typo для стилизации текста с настраиваемыми параметрами
 const Typo = ({
   size,
-  color = colors.text,
+  color,
   fontWeight,
   fontFamily,
   children,
   style,
   textProps = {},
 }: TypoProps) => {
+  const { currentTheme } = useContext(ThemeContext);
+
+  const textColor =
+    currentTheme === "dark" ? colors.textLight : colors.textDark;
+
+  const finalColor = color || textColor;
 
   const [fontsLoaded] = useFonts({
-    "GothamPro": require("../assets/fonts/gothampro.ttf"),
+    GothamPro: require("../assets/fonts/gothampro.ttf"),
     "GothamPro-Medium": require("../assets/fonts/gothampro_medium.ttf"),
     "GothamPro-Bold": require("../assets/fonts/gothampro_bold.ttf"),
   });
@@ -27,7 +34,7 @@ const Typo = ({
   }
 
   let selectedFont = fontFamily || "GothamPro";
-  
+
   if (!fontFamily) {
     if (fontWeight === "400" || fontWeight === "normal") {
       selectedFont = "GothamPro";
@@ -35,13 +42,13 @@ const Typo = ({
       selectedFont = "GothamPro-Medium";
     } else if (fontWeight === "700" || fontWeight === "bold") {
       selectedFont = "GothamPro-Bold";
-    } 
+    }
   }
 
   // Определение стилей текста на основе переданных пропсов
   const textStyle: TextStyle = {
     fontSize: size ? verticalScale(size) : verticalScale(18),
-    color,
+    color: finalColor,
     fontFamily: selectedFont,
   };
 

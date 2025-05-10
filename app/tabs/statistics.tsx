@@ -1,5 +1,5 @@
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
@@ -15,8 +15,10 @@ import {
 } from "@/services/transactionService";
 import TransactionList from "@/components/TransactionList";
 import { useFocusEffect } from "@react-navigation/native";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const Statistics = () => {
+  const { currentTheme } = useContext(ThemeContext);
   const [activeIndex, setActiveIndex] = useState(0);
   const { user } = useAuth();
   const [chartData, setChartData] = useState([]);
@@ -92,7 +94,9 @@ const Statistics = () => {
               setActiveIndex(event.nativeEvent.selectedSegmentIndex);
             }}
             tintColor={colors.neutral200}
-            backgroundColor={colors.neutral800}
+            backgroundColor={
+              currentTheme === "dark" ? colors.neutral800 : colors.neutral400
+            }
             appearance="dark"
             activeFontStyle={styles.segmentFontStyle}
             style={styles.segmentStyle}
@@ -114,9 +118,17 @@ const Statistics = () => {
                 yAxisLabelWidth={
                   [1, 2].includes(activeIndex) ? scale(50) : scale(50)
                 }
-                yAxisTextStyle={{ color: colors.neutral350 }}
+                yAxisTextStyle={{
+                  color:
+                    currentTheme === "dark"
+                      ? colors.neutral350
+                      : colors.neutral700,
+                }}
                 xAxisLabelTextStyle={{
-                  color: colors.neutral350,
+                  color:
+                    currentTheme === "dark"
+                      ? colors.neutral350
+                      : colors.neutral700,
                   fontSize: verticalScale(12),
                 }}
                 noOfSections={5}

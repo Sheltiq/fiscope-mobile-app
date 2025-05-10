@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import ModalWrapper from "@/components/ModalWrapper";
@@ -25,9 +25,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import ImageUpload from "@/components/ImageUpload";
 import { createOrUpdateWallet, deleteWallet } from "@/services/walletService";
+import { ThemeContext } from "@/contexts/themeContext";
 
 //Модальное окно для создания/редактирования кошелька
 const WalletModal = () => {
+  const { currentTheme } = useContext(ThemeContext);
   const { user, updateUserData } = useAuth();
   // Локальное состояние для данных кошелька
   const [wallet, setWallet] = useState<WalletType>({
@@ -123,15 +125,29 @@ const WalletModal = () => {
 
         <ScrollView contentContainerStyle={styles.form}>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Название кошелька</Typo>
+            <Typo
+              color={
+                currentTheme === "dark" ? colors.neutral200 : colors.neutral500
+              }
+              fontWeight={"medium"}
+            >
+              Название кошелька
+            </Typo>
             <Input
-              placeholder="Заначка"
+              placeholder="Введите название"
               value={wallet.name}
               onChangeText={(value) => setWallet({ ...wallet, name: value })}
             />
           </View>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Изображение</Typo>
+            <Typo
+              color={
+                currentTheme === "dark" ? colors.neutral200 : colors.neutral500
+              }
+              fontWeight={"medium"}
+            >
+              Изображение
+            </Typo>
             <ImageUpload
               file={wallet.image}
               onClear={() => setWallet({ ...wallet, image: null })}
@@ -142,7 +158,17 @@ const WalletModal = () => {
         </ScrollView>
       </View>
 
-      <View style={styles.footer}>
+      <View
+        style={[
+          styles.footer,
+          {
+            borderTopColor:
+              currentTheme === "dark"
+                ? colors.neutral700
+                : colors.borderColorFooterLight,
+          },
+        ]}
+      >
         {oldWallet?.id && !loading && (
           <Button
             onPress={showDeleteAlert}
@@ -159,7 +185,7 @@ const WalletModal = () => {
           </Button>
         )}
         <Button onPress={onSubmit} loading={loading} style={{ flex: 1 }}>
-          <Typo fontWeight={"medium"} size={18}>
+          <Typo fontWeight={"medium"} size={18} color="white">
             {oldWallet?.id ? "Обновить" : "Добавить"}
           </Typo>
         </Button>
@@ -184,7 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacingX._20,
     gap: scale(12),
     paddingTop: spacingY._15,
-    borderTopColor: colors.neutral700,
+    // borderTopColor: colors.neutral700,
     marginBottom: spacingY._5,
     borderTopWidth: 1,
   },

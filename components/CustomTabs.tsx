@@ -1,48 +1,69 @@
-import { View, Platform, TouchableOpacity, StyleSheet } from 'react-native';
-import { useLinkBuilder, useTheme } from '@react-navigation/native';
-import { Text, PlatformPressable } from '@react-navigation/elements';
-import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { colors, spacingY } from '@/constants/theme';
-import { verticalScale } from '@/utils/styling';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, Platform, TouchableOpacity, StyleSheet } from "react-native";
+import { useLinkBuilder, useTheme } from "@react-navigation/native";
+import { Text, PlatformPressable } from "@react-navigation/elements";
+import {
+  BottomTabBarProps,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
+import { colors, spacingY } from "@/constants/theme";
+import { verticalScale } from "@/utils/styling";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Компонент для кастомной нижней панели навигации
-export default function CustomTabs({ state, descriptors, navigation }: BottomTabBarProps) {
-
+export default function CustomTabs({
+  state,
+  descriptors,
+  navigation,
+  currentTheme,
+}: BottomTabBarProps & { currentTheme: string }) {
   // Иконки для каждой вкладки, зависят от состояния (выбрана или нет)
   const tabbarIcons: any = {
-    index: (isFocused: boolean) =>(
+    index: (isFocused: boolean) => (
       <MaterialCommunityIcons
         name="home"
         size={verticalScale(30)}
-        color={isFocused? colors.primary: colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral400}
       />
     ),
-    statistics: (isFocused: boolean) =>(
+    statistics: (isFocused: boolean) => (
       <MaterialCommunityIcons
         name="chart-bar"
         size={verticalScale(30)}
-        color={isFocused? colors.primary: colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral400}
       />
     ),
-    wallet: (isFocused: boolean) =>(
+    wallet: (isFocused: boolean) => (
       <MaterialCommunityIcons
         name="wallet"
         size={verticalScale(30)}
-        color={isFocused? colors.primary: colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral400}
       />
     ),
-    profile: (isFocused: boolean) =>(
+    profile: (isFocused: boolean) => (
       <MaterialCommunityIcons
         name="account-circle"
         size={verticalScale(30)}
-        color={isFocused? colors.primary: colors.neutral400}
+        color={isFocused ? colors.primary : colors.neutral400}
       />
     ),
-  }
+  };
 
   return (
-    <View style={styles.tabbar}>
+    <View
+      style={[
+        styles.tabbar,
+        {
+          backgroundColor:
+            currentTheme === "dark" ? colors.neutral800 : colors.btnLight,
+        },
+        {
+          borderTopColor:
+            currentTheme === "dark"
+              ? colors.neutral800
+              : colors.borderColorFooterLight,
+        },
+      ]}
+    >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         // Получение метки для вкладки (название или пользовательская метка)
@@ -59,7 +80,7 @@ export default function CustomTabs({ state, descriptors, navigation }: BottomTab
         // Обработчик нажатия на вкладку
         const onPress = () => {
           const event = navigation.emit({
-            type: 'tabPress',
+            type: "tabPress",
             target: route.key,
             canPreventDefault: true,
           });
@@ -72,7 +93,7 @@ export default function CustomTabs({ state, descriptors, navigation }: BottomTab
         // Обработчик долгого нажатия на вкладку
         const onLongPress = () => {
           navigation.emit({
-            type: 'tabLongPress',
+            type: "tabLongPress",
             target: route.key,
           });
         };
@@ -91,7 +112,6 @@ export default function CustomTabs({ state, descriptors, navigation }: BottomTab
               // Рендеринг иконки для текущей вкладки
               tabbarIcons[route.name] && tabbarIcons[route.name](isFocused)
             }
-
           </TouchableOpacity>
         );
       })}
@@ -105,10 +125,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: Platform.OS == "ios" ? verticalScale(73) : verticalScale(55),
-    backgroundColor: colors.neutral800,
+    // backgroundColor: colors.neutral800,
     justifyContent: "space-around",
     alignItems: "center",
-    borderTopColor: colors.neutral700,
+    // borderTopColor: colors.borderColorFooterLight,
     borderTopWidth: 1,
   },
   // Стили для элемента вкладки

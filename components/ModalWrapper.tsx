@@ -1,19 +1,21 @@
 import { Platform, StyleSheet, Text, View, Dimensions } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { ModalWrapperProps } from "@/types";
 import { StatusBar } from "expo-status-bar";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const isIos = Platform.OS == "ios";
 
-const ModalWrapper = ({
-  style,
-  children,
-  bg = colors.neutral800,
-}: ModalWrapperProps) => {
+const ModalWrapper = ({ style, children, bg }: ModalWrapperProps) => {
+  const { currentTheme } = useContext(ThemeContext);
+
+  const backgroundColor =
+    bg || (currentTheme === "dark" ? colors.neutral800 : colors.bgModalLight);
+
   return (
-    <View style={[styles.container, { backgroundColor: bg }, style && style]}>
-      <StatusBar style="light" />
+    <View style={[styles.container, { backgroundColor }, style && style]}>
+      <StatusBar style={currentTheme === "dark" ? "light" : "dark"} />
       {children}
     </View>
   );

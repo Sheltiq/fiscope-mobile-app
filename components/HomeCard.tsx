@@ -36,7 +36,7 @@ const HomeCard = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/card.png")}
+      source={require("../assets/images/NewCard.png")}
       resizeMode="stretch"
       style={styles.bgImage}
     >

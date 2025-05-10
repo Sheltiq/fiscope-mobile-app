@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import Button from "@/components/Button";
 import Typo from "@/components/Typo";
 import { signOut } from "firebase/auth";
@@ -21,8 +21,10 @@ import { useRouter } from "expo-router";
 import { limit, orderBy, where } from "firebase/firestore";
 import useFetchData from "@/hooks/useFetchData";
 import { TransactionType } from "@/types";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const Home = () => {
+  const { currentTheme } = useContext(ThemeContext);
   const { user } = useAuth();
   const router = useRouter();
 
@@ -52,12 +54,20 @@ const Home = () => {
           </View>
           <TouchableOpacity
             onPress={() => router.push("/modals/searchModal")}
-            style={styles.searchIcon}
+            style={[
+              styles.searchIcon,
+              {
+                backgroundColor:
+                  currentTheme === "dark" ? colors.neutral700 : colors.btnLight,
+              },
+            ]}
           >
             <FontAwesome6
               name="magnifying-glass"
               size={verticalScale(22)}
-              color={colors.neutral200}
+              color={
+                currentTheme === "dark" ? colors.neutral200 : colors.neutral350
+              }
             />
           </TouchableOpacity>
         </View>
@@ -107,9 +117,11 @@ const styles = StyleSheet.create({
     marginBottom: spacingY._10,
   },
   searchIcon: {
-    backgroundColor: colors.neutral700,
+    // backgroundColor: colors.neutral700,
     padding: spacingX._10,
     borderRadius: 50,
+    borderColor: colors.neutral500,
+    borderWidth: 0.3,
   },
   floatingButton: {
     height: verticalScale(50),

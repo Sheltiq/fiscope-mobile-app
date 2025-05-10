@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import ModalWrapper from "@/components/ModalWrapper";
@@ -36,8 +36,10 @@ import {
   createOrUpdateTransaction,
   deleteTransaction,
 } from "@/services/transactionService";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const TransactionModal = () => {
+  const { currentTheme } = useContext(ThemeContext);
   const { user } = useAuth();
 
   const [transaction, setTransaction] = useState<TransactionType>({
@@ -182,14 +184,33 @@ const TransactionModal = () => {
         >
           {/* категории расходов */}
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16}>
+            <Typo
+              color={
+                currentTheme === "dark" ? colors.neutral200 : colors.neutral500
+              }
+              size={16}
+              fontWeight={"medium"}
+            >
               Тип
             </Typo>
             <Dropdown
-              style={styles.dropdownContainer}
+              style={[
+                styles.dropdownContainer,
+                {
+                  borderColor:
+                    currentTheme === "dark"
+                      ? colors.neutral300
+                      : colors.neutral400,
+                },
+              ]}
               activeColor={colors.neutral700}
               // placeholderStyle={styles.dropdownPlaceholder}
-              selectedTextStyle={styles.dropdownSelectedText}
+              selectedTextStyle={[
+                styles.dropdownSelectedText,
+                {
+                  color: currentTheme === "dark" ? colors.white : colors.black,
+                },
+              ]}
               iconStyle={styles.dropdownIcon}
               data={transactionTypes}
               maxHeight={300}
@@ -209,14 +230,38 @@ const TransactionModal = () => {
 
           {/* кошельки */}
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16}>
+            <Typo
+              color={
+                currentTheme === "dark" ? colors.neutral200 : colors.neutral500
+              }
+              size={16}
+              fontWeight={"medium"}
+            >
               Кошелек
             </Typo>
             <Dropdown
-              style={styles.dropdownContainer}
+              style={[
+                styles.dropdownContainer,
+                {
+                  borderColor:
+                    currentTheme === "dark"
+                      ? colors.neutral300
+                      : colors.neutral400,
+                },
+              ]}
               activeColor={colors.neutral700}
-              placeholderStyle={styles.dropdownPlaceholder}
-              selectedTextStyle={styles.dropdownSelectedText}
+              placeholderStyle={[
+                styles.dropdownPlaceholder,
+                {
+                  color: currentTheme === "dark" ? colors.white : colors.black,
+                },
+              ]}
+              selectedTextStyle={[
+                styles.dropdownSelectedText,
+                {
+                  color: currentTheme === "dark" ? colors.white : colors.black,
+                },
+              ]}
               iconStyle={styles.dropdownIcon}
               data={wallets.map((wallet) => ({
                 label: `${wallet?.name} (₽${wallet.amount})`,
@@ -239,14 +284,42 @@ const TransactionModal = () => {
           {/* категории расходов */}
           {transaction.type == "expense" && (
             <View style={styles.inputContainer}>
-              <Typo color={colors.neutral200} size={16}>
+              <Typo
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral200
+                    : colors.neutral500
+                }
+                size={16}
+                fontWeight={"medium"}
+              >
                 Категория
               </Typo>
               <Dropdown
-                style={styles.dropdownContainer}
+                style={[
+                  styles.dropdownContainer,
+                  {
+                    borderColor:
+                      currentTheme === "dark"
+                        ? colors.neutral300
+                        : colors.neutral400,
+                  },
+                ]}
                 activeColor={colors.neutral700}
-                placeholderStyle={styles.dropdownPlaceholder}
-                selectedTextStyle={styles.dropdownSelectedText}
+                placeholderStyle={[
+                  styles.dropdownPlaceholder,
+                  {
+                    color:
+                      currentTheme === "dark" ? colors.white : colors.black,
+                  },
+                ]}
+                selectedTextStyle={[
+                  styles.dropdownSelectedText,
+                  {
+                    color:
+                      currentTheme === "dark" ? colors.white : colors.black,
+                  },
+                ]}
                 iconStyle={styles.dropdownIcon}
                 data={Object.values(expenseCategories)}
                 maxHeight={300}
@@ -270,12 +343,26 @@ const TransactionModal = () => {
           {/* выбор даты */}
 
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16}>
+            <Typo
+              color={
+                currentTheme === "dark" ? colors.neutral200 : colors.neutral500
+              }
+              size={16}
+              fontWeight={"medium"}
+            >
               Дата
             </Typo>
             {!showDatePicker && (
               <Pressable
-                style={styles.dateInput}
+                style={[
+                  styles.dateInput,
+                  {
+                    borderColor:
+                      currentTheme === "dark"
+                        ? colors.neutral300
+                        : colors.neutral400,
+                  },
+                ]}
                 onPress={() => setShowDatePicker(true)}
               >
                 <Typo size={14}>
@@ -310,7 +397,13 @@ const TransactionModal = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16}>
+            <Typo
+              color={
+                currentTheme === "dark" ? colors.neutral200 : colors.neutral500
+              }
+              size={16}
+              fontWeight={"medium"}
+            >
               Сумма
             </Typo>
             <Input
@@ -327,10 +420,25 @@ const TransactionModal = () => {
 
           <View style={styles.inputContainer}>
             <View style={styles.flexRow}>
-              <Typo color={colors.neutral200} size={16}>
+              <Typo
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral200
+                    : colors.neutral500
+                }
+                size={16}
+                fontWeight={"medium"}
+              >
                 Описание
               </Typo>
-              <Typo color={colors.neutral500} size={14}>
+              <Typo
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral500
+                    : colors.neutral400
+                }
+                size={14}
+              >
                 (необязательно)
               </Typo>
             </View>
@@ -356,10 +464,25 @@ const TransactionModal = () => {
 
           <View style={styles.inputContainer}>
             <View style={styles.flexRow}>
-              <Typo color={colors.neutral200} size={16}>
+              <Typo
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral200
+                    : colors.neutral500
+                }
+                size={16}
+                fontWeight={"medium"}
+              >
                 Квитанция
               </Typo>
-              <Typo color={colors.neutral500} size={14}>
+              <Typo
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral500
+                    : colors.neutral400
+                }
+                size={14}
+              >
                 (необязательно)
               </Typo>
             </View>
@@ -375,7 +498,17 @@ const TransactionModal = () => {
         </ScrollView>
       </View>
 
-      <View style={styles.footer}>
+      <View
+        style={[
+          styles.footer,
+          {
+            borderTopColor:
+              currentTheme === "dark"
+                ? colors.neutral700
+                : colors.borderColorFooterLight,
+          },
+        ]}
+      >
         {oldTransaction?.id && !loading && (
           <Button
             onPress={showDeleteAlert}
@@ -392,7 +525,7 @@ const TransactionModal = () => {
           </Button>
         )}
         <Button onPress={onSubmit} loading={loading} style={{ flex: 1 }}>
-          <Typo fontWeight={"medium"} size={18}>
+          <Typo fontWeight={"medium"} size={18} color="white">
             {oldTransaction?.id ? "Обновить" : "Отправить"}
           </Typo>
         </Button>
@@ -420,7 +553,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacingX._20,
     gap: scale(12),
     paddingTop: spacingY._15,
-    borderTopColor: colors.neutral700,
+    // borderTopColor: colors.neutral700,
     marginBottom: spacingY._5,
     borderTopWidth: 1,
   },
@@ -463,7 +596,7 @@ const styles = StyleSheet.create({
     height: verticalScale(54),
     alignItems: "center",
     borderWidth: 1,
-    borderColor: colors.neutral300,
+    // borderColor: colors.neutral300,
     borderRadius: radius._17,
     borderCurve: "continuous",
     paddingHorizontal: spacingX._15,
@@ -482,14 +615,14 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     height: verticalScale(54),
     borderWidth: 1,
-    borderColor: colors.neutral300,
+    // borderColor: colors.neutral300,
     paddingHorizontal: spacingX._15,
     borderRadius: radius._15,
     borderCurve: "continuous",
   },
   dropdownItemText: { color: colors.white },
   dropdownSelectedText: {
-    color: colors.white,
+    // color: colors.black,
     fontSize: verticalScale(14),
   },
   dropdownListContainer: {
@@ -506,7 +639,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   dropdownPlaceholder: {
-    color: colors.white,
+    // color: colors.white,
   },
   dropdownItemContainer: {
     borderRadius: radius._15,

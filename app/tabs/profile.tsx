@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
@@ -16,10 +16,12 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { signOut } from "firebase/auth";
 import { auth } from "@/config/firebase";
 import { useRouter } from "expo-router";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const Profile = () => {
   const { user } = useAuth();
   const router = useRouter();
+  const { currentTheme } = useContext(ThemeContext);
 
   // Массив опций аккаунта для отображения в профиле
   const accountOptions: accountOptionType[] = [
@@ -109,11 +111,16 @@ const Profile = () => {
 
           {/* Контейнер с именем и email пользователя */}
           <View style={styles.nameContainer}>
-            <Typo size={24} fontWeight={"medium"} color={colors.neutral100}>
+            <Typo size={24} fontWeight={"medium"}>
               {" "}
               {user?.name}{" "}
             </Typo>
-            <Typo size={15} color={colors.neutral400}>
+            <Typo
+              size={15}
+              color={
+                currentTheme === "dark" ? colors.neutral400 : colors.textDark
+              }
+            >
               {" "}
               {user?.email}{" "}
             </Typo>
@@ -152,7 +159,9 @@ const Profile = () => {
                   <MaterialCommunityIcons
                     name="chevron-right"
                     size={verticalScale(30)}
-                    color={colors.white}
+                    color={
+                      currentTheme === "dark" ? colors.white : colors.black
+                    }
                   />
                 </TouchableOpacity>
               </Animated.View>

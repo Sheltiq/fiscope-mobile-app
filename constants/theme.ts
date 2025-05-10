@@ -8,6 +8,7 @@ export const colors = {
   text: "#fff",
   textLight: "#e5e5e5",
   textLighter: "#d4d4d4",
+  textDark: "#000",
   white: "#fff",
   black: "#000",
   rose: "#ef4444",
@@ -24,6 +25,11 @@ export const colors = {
   neutral700: "#404040",
   neutral800: "#262626",
   neutral900: "#171717",
+  bgModalLight: "#EBEDF0",
+  bgScreenLight: "#E0E0E0",
+  btnLight: "#FFFFFF",
+  borderColorFooterLight: "#D7D8D9",
+  neutralBlue: "#ECEFF1",
 };
 
 //Интервалы X для горизонтального расположения любых полей, отступов и тд
