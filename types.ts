@@ -17,7 +17,7 @@ import {
 } from "react-native";
 
 export type ScreenWrapperProps = {
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   children: React.ReactNode;
   bg?: string;
 };

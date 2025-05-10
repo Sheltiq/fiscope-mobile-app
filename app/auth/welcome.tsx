@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { verticalScale } from "@/utils/styling";
@@ -8,8 +8,10 @@ import Button from "@/components/Button";
 import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const WelcomePage = () => {
+  const { currentTheme } = useContext(ThemeContext);
   const router = useRouter();
   return (
     <ScreenWrapper>
@@ -20,7 +22,9 @@ const WelcomePage = () => {
             onPress={() => router.push("/auth/login")}
             style={styles.loginButton}
           >
-            <Typo fontWeight={"medium"}>Войти</Typo>
+            <Typo fontWeight={"medium"} size={18} color={colors.primary}>
+              Войти
+            </Typo>
           </TouchableOpacity>
 
           {/* Анимированное приветственное изображение с эффектом появления */}
@@ -34,7 +38,21 @@ const WelcomePage = () => {
         </View>
 
         {/* Нижний колонтитул */}
-        <View style={styles.footer}>
+        <View
+          style={[
+            styles.footer,
+            {
+              backgroundColor:
+                currentTheme === "dark"
+                  ? colors.neutral900
+                  : colors.bgScreenLight,
+            },
+            {
+              shadowColor:
+                currentTheme === "dark" ? colors.white : colors.black,
+            },
+          ]}
+        >
           {/* Анимированный заголовок с пружинным эффектом */}
           <Animated.View
             entering={FadeInDown.duration(1000).springify().damping(12)}
@@ -56,10 +74,16 @@ const WelcomePage = () => {
               .damping(12)}
             style={{ alignItems: "center", gap: 2 }}
           >
-            <Typo size={15} color={colors.textLight}>
+            <Typo
+              size={15}
+              color={currentTheme === "dark" ? colors.textLight : colors.black}
+            >
               Финансы должны быть упорядочены,
             </Typo>
-            <Typo size={15} color={colors.textLight}>
+            <Typo
+              size={15}
+              color={currentTheme === "dark" ? colors.textLight : colors.black}
+            >
               чтобы в будущем вести лучший образ жизни
             </Typo>
           </Animated.View>
@@ -73,7 +97,7 @@ const WelcomePage = () => {
             style={styles.buttonContainer}
           >
             <Button onPress={() => router.push("/auth/register")}>
-              <Typo size={23} fontWeight={"bold"}>
+              <Typo size={23} fontWeight={"bold"} color="white">
                 Начать
               </Typo>
             </Button>
@@ -102,12 +126,12 @@ const styles = StyleSheet.create({
     marginRight: spacingX._20,
   },
   footer: {
-    backgroundColor: colors.neutral900,
+    // backgroundColor: colors.neutral900,
     alignItems: "center",
     paddingTop: verticalScale(30),
     paddingBottom: verticalScale(45),
     gap: spacingY._20,
-    shadowColor: "white",
+    // shadowColor: "white",
     shadowOffset: { width: 0, height: -10 },
     elevation: 10,
     shadowRadius: 25,

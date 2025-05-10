@@ -1,7 +1,8 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { colors } from "@/constants/theme";
 import ScreenWrapper from "@/components/ScreenWrapper";
+import { ThemeContext } from "@/contexts/themeContext";
 // import { useRouter } from 'expo-router'
 
 const SplashScreen = () => {
@@ -12,8 +13,18 @@ const SplashScreen = () => {
   //   }, 1000);
   // },[])
 
+  const { currentTheme } = useContext(ThemeContext);
+
   return (
-    <ScreenWrapper style={styles.container}>
+    <ScreenWrapper
+      style={[
+        styles.container,
+        {
+          backgroundColor:
+            currentTheme === "dark" ? colors.neutral900 : colors.bgScreenLight,
+        },
+      ]}
+    >
       <Image
         style={styles.logo}
         resizeMode="contain"
@@ -30,7 +41,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.neutral900,
+    // backgroundColor: colors.neutral900,
   },
   logo: {
     height: "30%",

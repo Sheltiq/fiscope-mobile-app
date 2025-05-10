@@ -1,17 +1,19 @@
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import React, { useRef, useState } from 'react';
-import ScreenWrapper from '@/components/ScreenWrapper';
-import Typo from '@/components/Typo';
-import { colors, spacingX, spacingY } from '@/constants/theme';
-import { verticalScale } from '@/utils/styling';
-import BackButton from '@/components/BackButton';
-import Input from '@/components/Input';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Button from '@/components/Button';
-import { useRouter } from 'expo-router';
-import { useAuth } from '@/contexts/authContext';
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useRef, useState } from "react";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import Typo from "@/components/Typo";
+import { colors, spacingX, spacingY } from "@/constants/theme";
+import { verticalScale } from "@/utils/styling";
+import BackButton from "@/components/BackButton";
+import Input from "@/components/Input";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Button from "@/components/Button";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/authContext";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const Register = () => {
+  const { currentTheme } = useContext(ThemeContext);
 
   // Создаем ссылки для хранения значений полей ввода
   const emailRef = useRef("");
@@ -25,11 +27,15 @@ const Register = () => {
   const handleSubmit = async () => {
     // Проверяем, заполнены ли все поля
     if (!emailRef.current || !passwordRef.current || !nameRef.current) {
-      Alert.alert('Зарегистрироваться', "Пожалуйста заполните все поля");
+      Alert.alert("Зарегистрироваться", "Пожалуйста заполните все поля");
       return;
     }
     setIsLoading(true); // Устанавливаем состояние загрузки
-    const res = await registerUser(emailRef.current, passwordRef.current, nameRef.current); // Вызываем функцию регистрации
+    const res = await registerUser(
+      emailRef.current,
+      passwordRef.current,
+      nameRef.current
+    ); // Вызываем функцию регистрации
     setIsLoading(false); // Сбрасываем состояние загрузки
     console.log("Результат регистрации:", res);
     if (!res.success) {
@@ -55,7 +61,12 @@ const Register = () => {
 
         {/* Форма регистрации */}
         <View style={styles.form}>
-          <Typo size={16} color={colors.textLighter}>
+          <Typo
+            size={16}
+            color={
+              currentTheme === "dark" ? colors.textLight : colors.neutral500
+            }
+          >
             Создай аккаунт для учета расходов
           </Typo>
           <Input
@@ -65,7 +76,11 @@ const Register = () => {
               <MaterialCommunityIcons
                 name="account"
                 size={verticalScale(22)}
-                color={colors.neutral300}
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral300
+                    : colors.neutral400
+                }
               />
             }
           />
@@ -76,7 +91,11 @@ const Register = () => {
               <MaterialCommunityIcons
                 name="login"
                 size={verticalScale(22)}
-                color={colors.neutral300}
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral300
+                    : colors.neutral400
+                }
               />
             }
           />
@@ -88,7 +107,11 @@ const Register = () => {
               <MaterialCommunityIcons
                 name="form-textbox-password"
                 size={verticalScale(22)}
-                color={colors.neutral300}
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral300
+                    : colors.neutral400
+                }
               />
             }
           />
@@ -103,10 +126,12 @@ const Register = () => {
 
         {/* Нижний текст с ссылкой на вход */}
         <View style={styles.footer}>
-          <Typo size={15}>У вас уже есть аккаунт?</Typo>
+          <Typo size={15} color={colors.neutral500}>
+            У вас уже есть аккаунт?
+          </Typo>
           {/* Переход на экран входа */}
           <Pressable onPress={() => router.replace("/auth/login")}>
-            <Typo size={15} fontWeight={'bold'} color={colors.primary}>
+            <Typo size={15} fontWeight={"bold"} color={colors.primary}>
               Войти
             </Typo>
           </Pressable>

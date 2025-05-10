@@ -11,8 +11,8 @@ export const ThemeContext = createContext<ThemeContextType>({
 });
 
 const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const colorSheme = useColorScheme();
-  const [theme, setTheme] = useState<string>("dark");
+  const colorScheme = useColorScheme();
+  const [theme, setTheme] = useState<string>(colorScheme || "dark");
   const [systemTheme, setSystemTheme] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,25 +24,32 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
         if (savedThemeObjectData) {
           setTheme(savedThemeObjectData.mode);
           setSystemTheme(savedThemeObjectData.system);
+        } else {
+          const themeObject = {
+            mode: colorScheme || "dark",
+            system: true,
+          };
+          AsyncStorage.setItem("theme", JSON.stringify(themeObject));
+          setTheme(themeObject.mode);
+          setSystemTheme(true);
         }
       } catch (error) {
         console.log("Ошибка загрузки темы.", error);
       }
     };
     getTheme();
-  }, []);
+  }, [colorScheme]);
 
   useEffect(() => {
-    if (colorSheme && systemTheme) {
+    if (colorScheme && systemTheme) {
       const themeObject = {
-        mode: colorSheme,
+        mode: colorScheme,
         system: true,
       };
       AsyncStorage.setItem("theme", JSON.stringify(themeObject));
-      setTheme(colorSheme);
-      setSystemTheme(true);
+      setTheme(colorScheme);
     }
-  }, [colorSheme]);
+  }, [colorScheme, systemTheme]);
 
   const toggleTheme = (newTheme: string) => {
     const themeObject = {
@@ -55,13 +62,13 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const useSystemTheme = () => {
-    if (colorSheme) {
+    if (colorScheme) {
       const themeObject = {
-        mode: colorSheme,
+        mode: colorScheme,
         system: true,
       };
       AsyncStorage.setItem("theme", JSON.stringify(themeObject));
-      setTheme(colorSheme);
+      setTheme(colorScheme);
       setSystemTheme(true);
     }
   };

@@ -1,17 +1,19 @@
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import React, { useRef, useState } from 'react';
-import ScreenWrapper from '@/components/ScreenWrapper';
-import Typo from '@/components/Typo';
-import { colors, spacingX, spacingY } from '@/constants/theme';
-import { verticalScale } from '@/utils/styling';
-import BackButton from '@/components/BackButton';
-import Input from '@/components/Input';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Button from '@/components/Button';
-import { useRouter } from 'expo-router';
-import { useAuth } from '@/contexts/authContext';
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useRef, useState } from "react";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import Typo from "@/components/Typo";
+import { colors, spacingX, spacingY } from "@/constants/theme";
+import { verticalScale } from "@/utils/styling";
+import BackButton from "@/components/BackButton";
+import Input from "@/components/Input";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Button from "@/components/Button";
+import { useRouter } from "expo-router";
+import { useAuth } from "@/contexts/authContext";
+import { ThemeContext } from "@/contexts/themeContext";
 
 const Login = () => {
+  const { currentTheme } = useContext(ThemeContext);
 
   // Ссылки для хранения значений полей ввода email и пароля
   const emailRef = useRef("");
@@ -28,7 +30,7 @@ const Login = () => {
   const handleSubmit = async () => {
     // Проверка, заполнены ли поля email и пароля
     if (!emailRef.current || !passwordRef.current) {
-      Alert.alert('Войти', "Пожалуйста заполните все поля");
+      Alert.alert("Войти", "Пожалуйста заполните все поля");
       return;
     }
 
@@ -61,7 +63,12 @@ const Login = () => {
 
         {/* Форма входа */}
         <View style={styles.form}>
-          <Typo size={14} color={colors.textLighter}>
+          <Typo
+            size={14}
+            color={
+              currentTheme === "dark" ? colors.textLighter : colors.neutral500
+            }
+          >
             Войдите чтобы отслеживать все свои расходы
           </Typo>
           {/* Поле ввода email */}
@@ -72,7 +79,11 @@ const Login = () => {
               <MaterialCommunityIcons
                 name="login"
                 size={verticalScale(22)}
-                color={colors.neutral300}
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral300
+                    : colors.neutral400
+                }
               />
             }
           />
@@ -85,15 +96,19 @@ const Login = () => {
               <MaterialCommunityIcons
                 name="form-textbox-password"
                 size={verticalScale(22)}
-                color={colors.neutral300}
+                color={
+                  currentTheme === "dark"
+                    ? colors.neutral300
+                    : colors.neutral400
+                }
               />
             }
           />
 
           {/* Ссылка на восстановление пароля */}
-          <Typo size={14} color={colors.text} style={{ alignSelf: 'flex-end' }}>
+          {/* <Typo size={14} color={colors.text} style={{ alignSelf: "flex-end" }}>
             Забыли пароль!?
-          </Typo>
+          </Typo> */}
 
           {/* Кнопка входа */}
           <Button loading={isLoading} onPress={handleSubmit}>
@@ -105,9 +120,11 @@ const Login = () => {
 
         {/* Нижний колонтитул с ссылкой на регистрацию */}
         <View style={styles.footer}>
-          <Typo size={15}>У вас нет аккаунта?</Typo>
+          <Typo size={15} color={colors.neutral500}>
+            У вас нет аккаунта?
+          </Typo>
           <Pressable onPress={() => router.replace("/auth/register")}>
-            <Typo size={15} fontWeight={'bold'} color={colors.primary}>
+            <Typo size={15} fontWeight={"bold"} color={colors.primary}>
               Зарегистрироваться
             </Typo>
           </Pressable>
