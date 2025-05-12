@@ -1,79 +1,79 @@
 import { CategoryType, ExpenseCategoriesType } from "@/types";
-import { colors } from "./theme";
-
-import * as Icons from "phosphor-react-native";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const expenseCategories: ExpenseCategoriesType = {
   groceries: {
     label: "Продукты питания",
     value: "groceries",
-    icon: Icons.ShoppingCart,
+    icon: (props: any) => <FontAwesome name="shopping-cart" {...props} />,
     bgColor: "#4B5563",
   },
   rent: {
     label: "Аренда",
     value: "rent",
-    icon: Icons.House,
+    icon: (props: any) => <FontAwesome name="home" {...props} />,
     bgColor: "#075985",
   },
   utilities: {
     label: "ЖКХ",
     value: "utilities",
-    icon: Icons.Lightbulb,
+    icon: (props: any) => (
+      <MaterialCommunityIcons name="lightbulb-on-outline" {...props} />
+    ),
     bgColor: "#ca8a04",
   },
   transportation: {
     label: "Транспорт",
     value: "transportation",
-    icon: Icons.Car,
+    icon: (props: any) => <FontAwesome name="bus" {...props} />,
     bgColor: "#b45309",
   },
   entertainment: {
     label: "Развлечение",
     value: "entertainment",
-    icon: Icons.FilmStrip,
+    icon: (props: any) => <FontAwesome name="film" {...props} />,
     bgColor: "#0f766e",
   },
   dining: {
     label: "Питание",
     value: "dining",
-    icon: Icons.ForkKnife,
+    icon: (props: any) => <FontAwesome name="cutlery" {...props} />,
     bgColor: "#be185d",
   },
   health: {
     label: "Здоровье",
     value: "health",
-    icon: Icons.Heart,
+    icon: (props: any) => <FontAwesome name="heartbeat" {...props} />,
     bgColor: "#e11d48",
   },
   insurance: {
     label: "Страхование",
     value: "insurance",
-    icon: Icons.ShieldCheck,
+    icon: (props: any) => <FontAwesome name="shield" {...props} />,
     bgColor: "#404040",
   },
   savings: {
     label: "Сбережения",
     value: "savings",
-    icon: Icons.PiggyBank,
+    icon: (props: any) => <FontAwesome name="bank" {...props} />,
     bgColor: "#065F46",
   },
   clothing: {
     label: "Одежда",
     value: "clothing",
-    icon: Icons.TShirt,
+    icon: (props: any) => <FontAwesome name="shopping-bag" {...props} />,
     bgColor: "#7c3aed",
   },
   personal: {
     label: "Личный",
     value: "personal",
-    icon: Icons.User,
+    icon: (props: any) => <FontAwesome name="user" {...props} />,
     bgColor: "#a21caf",
   },
   others: {
     label: "Другое",
     value: "others",
-    icon: Icons.DotsThreeOutline,
+    icon: (props: any) => <FontAwesome name="ellipsis-h" {...props} />,
     bgColor: "#525252",
   },
 };
@@ -81,7 +81,7 @@ export const expenseCategories: ExpenseCategoriesType = {
 export const incomeCategory: CategoryType = {
   label: "Доход",
   value: "income",
-  icon: Icons.CurrencyDollarSimple,
+  icon: (props: any) => <FontAwesome name="dollar" {...props} />,
   bgColor: "#16a34a",
 };
 

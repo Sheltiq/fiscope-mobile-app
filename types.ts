@@ -1,7 +1,5 @@
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Href } from "expo-router";
 import { Firestore, Timestamp } from "firebase/firestore";
-import { Icon } from "phosphor-react-native";
 import React, { ReactNode } from "react";
 import {
   ActivityIndicator,
@@ -86,7 +84,7 @@ export type TransactionType = {
 export type CategoryType = {
   label: string;
   value: string;
-  icon: Icon;
+  icon: (props: any) => JSX.Element;
   bgColor: string;
 };
 export type ExpenseCategoriesType = {
