@@ -8,7 +8,7 @@ import ContactButton from "@/components/ContactButton";
 
 const contactModal = () => {
   const handleTelegramPress = () => {
-    Linking.openURL("https://t.me/+yFq_qz83BsQyYzFi");
+    Linking.openURL("https://t.me/+F7ScqwF4BocyZDBi");
   };
   const handleGithubPress = () => {
     Linking.openURL("https://github.com/Sheltiq/fiscope-mobile-app");
