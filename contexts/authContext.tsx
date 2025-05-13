@@ -1,7 +1,11 @@
 import { auth, firestore } from "@/config/firebase";
 import { AuthContextType, UserType } from "@/types";
 import { router } from "expo-router";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -9,20 +13,21 @@ import { createContext, useContext, useEffect, useState } from "react";
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // Провайдер контекста аутентификации
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   // Состояние для хранения данных пользователя
   const [user, setUser] = useState<UserType>(null);
 
   // Эффект для отслеживания изменений состояния аутентификации
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-
       // Если пользователь аутентифицирован, обновляем данные пользователя и перенаправляем на вкладки
       if (firebaseUser) {
         setUser({
           uid: firebaseUser?.uid,
           email: firebaseUser?.email,
-          name: firebaseUser?.displayName
+          name: firebaseUser?.displayName,
         });
         updateUserData(firebaseUser.uid);
         router.replace("/tabs");
@@ -44,9 +49,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let msg = error.message;
       console.log("error message: ", msg);
       // Обработка ошибок аутентификации
-      if (msg.includes("(auth/network-requast-failed)")) msg = "Нет подключения к сети";
-      if (msg.includes("(auth/invalid-credential)")) msg = "Неправильные данные";
-      if (msg.includes("(auth/invalid-email)")) msg = "Недопустимый адрес электронной почты";
+      if (msg.includes("(auth/network-request-failed)"))
+        msg = "Нет подключения к сети";
+      if (msg.includes("(auth/invalid-credential)"))
+        msg = "Неправильные данные";
+      if (msg.includes("(auth/invalid-email)"))
+        msg = "Недопустимый адрес электронной почты";
       return { success: false, msg };
     }
   };
@@ -54,17 +62,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Функция для регистрации нового пользователя
   const register = async (email: string, password: string, name: string) => {
     try {
-      let response = await createUserWithEmailAndPassword(auth, email, password);
+      let response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       // Сохраняем данные пользователя в Firestore
-      await setDoc(doc(firestore, "users", response?.user?.uid), { name, email, uid: response?.user?.uid, });
+      await setDoc(doc(firestore, "users", response?.user?.uid), {
+        name,
+        email,
+        uid: response?.user?.uid,
+      });
       return { success: true };
     } catch (error: any) {
       let msg = error.message;
       console.log("error massage", msg);
       // Обработка ошибок регистрации
-      if (msg.includes("(auth/network-requast-failed)")) msg = "Нет подключения к сети";
-      if (msg.includes("(auth/email-already-in-use)")) msg = "Этот адрес электронной почты уже используется";
-      if (msg.includes("(auth/invalid-email)")) msg = "Недопустимый адрес электронной почты";
+      if (msg.includes("(auth/network-request-failed)"))
+        msg = "Нет подключения к сети";
+      if (msg.includes("(auth/email-already-in-use)"))
+        msg = "Этот адрес электронной почты уже используется";
+      if (msg.includes("(auth/invalid-email)"))
+        msg = "Недопустимый адрес электронной почты";
       return { success: false, msg };
     }
   };
